@@ -6,7 +6,7 @@ import plotly.express as px
 from datetime import datetime as dt
 import seaborn as sns
 
-# DATA_URL = ('D:/GPCANDILLADA/Data/Tur-Gen_Data.csv')
+
 st.sidebar.markdown("## HEDCOR")
 file = st.sidebar.file_uploader("Choose CSV file", type="csv")
 
