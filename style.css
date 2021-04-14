@@ -1,0 +1,17 @@
+body {
+    color: rgb(29, 26, 26);
+    background-color: #c8cace;
+}
+
+.stButton>button {
+    color: #fdfdfd;
+    background-color: rgb(27, 97, 226);
+}
+
+.reportview-container .main .block-container {
+    max-width: 95%;
+}
+
+.sidebar .sidebar-content {
+    max-width: 65%;
+}
