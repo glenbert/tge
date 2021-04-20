@@ -5,9 +5,11 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 from datetime import datetime as dt
 import seaborn as sns
+from PIL import Image
 
+image = Image.open('hedcor-logo.png')
+st.sidebar.image(image, width=200)
 
-st.sidebar.markdown("## HEDCOR")
 file = st.sidebar.file_uploader("Choose CSV file", type="csv")
 
 
