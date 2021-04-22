@@ -1,17 +1,22 @@
 body {
     color: rgb(29, 26, 26);
-    background-color: #c8cace;
+    background-color: #d9dde4;
+    padding-top: 0em;
 }
 
 .stButton>button {
-    color: #fdfdfd;
+    color: #0c0b0b;
     background-color: rgb(27, 97, 226);
 }
 
 .reportview-container .main .block-container {
     max-width: 95%;
+    padding-top: 0em;
 }
 
 .sidebar .sidebar-content {
-    max-width: 65%;
+    background-image: linear-gradient(#ecf0f1, #9dcbfa);
+    color: rgb(10, 10, 10);
+    width: 15em;
+    padding-top: 2.5em;
 }
