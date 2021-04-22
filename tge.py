@@ -20,7 +20,7 @@ def local_css(file_name):
 
 
 def remote_css(url):
-    st.markdown(f'<link href="{https://github.com/glenbert/tge/blob/main/style.css}" rel="stylesheet">',
+    st.markdown(f'<link href="{style.css}" rel="stylesheet">',
                 unsafe_allow_html=True)
 
 
