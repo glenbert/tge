@@ -29,7 +29,7 @@ def icon(icon_name):
         f'<i class="material-icons">{icon_name}</i>', unsafe_allow_html=True)
 
 
-local_css("style.css")
+local_css("https://github.com/glenbert/tge/blob/main/style.css")
 remote_css('https://fonts.googleapis.com/icon?family=Material+Icons')
 
 st.markdown("## Turbine-Generator Efficiency")
