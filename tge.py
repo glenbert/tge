@@ -4,27 +4,15 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.express as px
 from datetime import datetime as dt
+import plotly.graph_objects as go
 import seaborn as sns
 from PIL import Image
-
-image = Image.open('hedcor-logo.png')
-st.sidebar.image(image, width=200)
-
-file = st.sidebar.file_uploader("Choose CSV file", type="csv")
+from comm_data import *
 
 
-def main():
-    st.markdown("## Turbine-Generator Efficiency")
 
-    option = st.sidebar.selectbox(
-        "Option", ('Dashboard', 'Individual Test'))
-
-    if option == 'Dashboard':
-        dashboard_view()
-
-    if option == 'Individual Test':
-        st.title(option)
-
+img_logo = Image.open('hedcor-logo.png')
+st.sidebar.image(img_logo, width=200)
 
 def local_css(file_name):
     with open(file_name) as f:
@@ -44,7 +32,18 @@ def icon(icon_name):
 local_css("style.css")
 remote_css('https://fonts.googleapis.com/icon?family=Material+Icons')
 
+st.markdown("## Turbine-Generator Efficiency")
+    
+with st.beta_expander("Upload Data"):
+    file = st.file_uploader("Choose CSV file", type="csv")
 
+
+def main():
+    
+  
+    dashboard_view()
+
+  
 @st.cache
 def load_data():
     if file is not None:
@@ -84,7 +83,7 @@ def scatterplot_efficiency_date(dt):
     fig.update_layout(
         xaxis_title="Date",
         yaxis_title="Turbine-Generator Efficiency",
-        width=900
+        width=912
     )
 
     st.write(fig)
@@ -100,41 +99,66 @@ def scatterplot_discharge_power(dt):
             ].reset_index(drop=True)
 
     dt = dt[(dt['Efficiency'] > 0)]
-
+    
+    fig = go.Figure()
+    
     fig = px.scatter(dt,
                      x="Power Output",
                      y="Discharge",
                      color="Month"
                      )
+    
     fig.update_layout(
         xaxis_title="Power Output",
         yaxis_title="Discharge",
-        width=900
+        width=912
     )
 
     st.write(fig)
 
 
-def scatterplot_efficiency_power(dt):
+def scatterplot_efficiency_power(dt, com, eff):
 
     dt['DateTime'] = pd.to_datetime(dt['DateTime'])
 
     dt = dt.sort_values(by=['DateTime'])
-
+    
     dt = dt[["Discharge", "Power Output", "Month", "Efficiency"]
             ].reset_index(drop=True)
 
     dt = dt[(dt['Efficiency'] > 0)]
 
-    fig = px.scatter(dt,
-                     x="Power Output",
-                     y="Efficiency",
-                     color="Month"
-                     )
-    fig.update_layout(
-        xaxis_title="Power Output",
-        yaxis_title="Efficiency",
-        width=900
+    dt_com = com
+    
+    fig = go.Figure()
+    
+    fig.add_trace(go.Scatter(
+                     x=dt["Power Output"],
+                     y=dt["Efficiency"],
+                     name="Actual Data",
+                     mode='markers',
+                     marker_color='lightskyblue',
+                     marker_size=8,
+                     marker_line_width=1
+                     ))
+    
+    
+    fig.add_trace(go.Scatter(
+                     x=dt_com["Power Output"],
+                     y=dt_com[eff],
+                     name="Commission Data",
+                     mode='markers',
+                     marker_symbol='x-dot',
+                     marker_color='rgba(152, 0, 0, .8)',
+                     marker_size=10,
+                     marker_line_width=2
+                     ))
+    
+    fig.update_traces(mode='markers')
+    fig.update_layout(xaxis_title="Power Output",
+                      yaxis_zeroline=False, xaxis_zeroline=False,
+                      width=912
+                  
     )
 
     st.write(fig)
@@ -167,8 +191,9 @@ def heatmap(dt):
 
 def dashboard_view():
 
-    st.sidebar.markdown('#### Filter data')
+    st.sidebar.markdown('#### Filter Data')
     if file is not None:
+        
         data = load_data()
 
         PLANT = data['Plant'].unique()
@@ -176,26 +201,39 @@ def dashboard_view():
 
         PLANT_SELECTED = st.sidebar.selectbox('Select plant', PLANT)
         UNIT_SELECTED = st.sidebar.selectbox('Select Unit', UNIT)
-
+        
+         
+        if UNIT_SELECTED == "Unit 1":    
+          unt = df_comm_unit_1
+          unt = df_comm_unit_1[(df_comm_unit_1["Plant"]== PLANT_SELECTED)]
+        else:
+          unt = df_comm_unit_2
+          unt = df_comm_unit_2[(df_comm_unit_1["Plant"]== PLANT_SELECTED)]
+        
         dt = get_selected_data(data, PLANT_SELECTED, UNIT_SELECTED)
 
+        st.markdown('### Efficiency and Power Output')
+        option_eff = st.selectbox('Select Type of Efficiency',('Turbine Guaranted Eff.', 'Generator Guaranted Eff.', 'Overall Eff.'))
+        scatterplot_efficiency_power(dt, unt, option_eff)
+        
+        st.markdown('### Discharge and Power Output')
+        scatterplot_discharge_power(dt)
+        
         st.markdown('### Hourly Efficiency')
         scatterplot_efficiency_date(dt)
 
-        st.markdown('### Discharge and Power Output')
-        scatterplot_discharge_power(dt)
+        # st.markdown('### Pair Plot')
+        # pairplot(dt)
 
-        st.markdown('### Efficiency and Power Output')
-        scatterplot_efficiency_power(dt)
-
-        st.markdown('### Pair Plot')
-        pairplot(dt)
-
-        st.markdown('### Correlation Plot')
-        heatmap(dt)
+        # st.markdown('### Correlation Plot')
+        # heatmap(dt)
 
         st.markdown('### Raw data')
         st.dataframe(dt)
+        
+        st.markdown('### Tubine - Generator Commissioning Result')
+        st.dataframe(unt)
+ 
 
 
 if __name__ == "__main__":
