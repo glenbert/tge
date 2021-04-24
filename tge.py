@@ -113,7 +113,7 @@ def scatterplot_efficiency_date(dt, com, eff):
     
     fig.update_layout(
         xaxis_title="Date",
-        yaxis_title="Turbine-Generator Efficiency",
+        yaxis_title="Efficiency",
         width=912
     )
 
@@ -206,6 +206,7 @@ def scatterplot_efficiency_power(dt, com, eff):
                      ))
 
     fig.update_layout(xaxis_title="Power Output",
+                      yaxis_title="Efficiency",
                       yaxis_zeroline=False, xaxis_zeroline=False,
                       width=912
                   
