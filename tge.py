@@ -14,6 +14,8 @@ from comm_data import *
 img_logo = Image.open('hedcor-logo.png')
 st.sidebar.image(img_logo, width=200)
 
+
+
 def local_css(file_name):
     with open(file_name) as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
@@ -26,8 +28,7 @@ def remote_css(url):
 
 def icon(icon_name):
     st.markdown(
-        f'<i class="material-icons">{icon_name}</i>', unsafe_allow_html=True)
-
+        f'<i class="material-design-icons">{icon_name}</i>', unsafe_allow_html=True)
 
 local_css("style.css")
 remote_css('https://fonts.googleapis.com/icon?family=Material+Icons')
@@ -65,7 +66,7 @@ def get_selected_data(dt, plant, unit):
     return data
 
 
-def scatterplot_efficiency_date(dt):
+def scatterplot_efficiency_date(dt, com, eff):
 
     dt['DateTime'] = pd.to_datetime(dt['DateTime'])
 
@@ -75,11 +76,34 @@ def scatterplot_efficiency_date(dt):
 
     dt = dt[(dt['Efficiency'] > 0)]
 
-    fig = px.scatter(dt,
-                     x="DateTime",
-                     y="Efficiency",
-                     color="Period"
-                     )
+    # fig = px.scatter(dt,
+    #                  x="DateTime",
+    #                  y="Efficiency",
+    #                  color="Period"
+    #                  )
+    
+    
+    dt_com = com
+    min_dt = dt["DateTime"].min()
+    max_dt = dt["DateTime"].max()
+    
+    min_com = dt_com[eff].min()
+    max_com = dt_com[eff].max()
+    
+    fig = go.Figure()
+    
+    fig.add_trace(go.Scatter(
+                     x=dt["DateTime"],
+                     y=dt["Efficiency"],
+                     name="Actual Data",
+                     mode='markers',
+                     marker_color='lightskyblue',
+                     marker_size=8,
+                     marker_line_width=1
+                     ))
+    fig.add_shape(type = 'line', x0=min_dt, y0=min_com, x1=max_dt, y1=min_com, line= dict(color='green'), xref='x', yref='y', )
+    fig.add_shape(type = 'line', x0=min_dt, y0=max_com, x1=max_dt, y1=max_com, line= dict(color='green'), xref='x', yref='y')
+    
     fig.update_layout(
         xaxis_title="Date",
         yaxis_title="Turbine-Generator Efficiency",
@@ -89,7 +113,7 @@ def scatterplot_efficiency_date(dt):
     st.write(fig)
 
 
-def scatterplot_discharge_power(dt):
+def scatterplot_discharge_power(dt, com):
 
     dt['DateTime'] = pd.to_datetime(dt['DateTime'])
 
@@ -100,18 +124,38 @@ def scatterplot_discharge_power(dt):
 
     dt = dt[(dt['Efficiency'] > 0)]
     
+    dt_com = com
+    
     fig = go.Figure()
     
-    fig = px.scatter(dt,
-                     x="Power Output",
-                     y="Discharge",
-                     color="Month"
-                     )
+    fig.add_trace(go.Scatter(
+                     x=dt["Power Output"],
+                     y=dt["Discharge"],
+                     name="Actual Data",
+                     mode='markers',
+                     marker_color='lightskyblue',
+                     marker_size=8,
+                     marker_line_width=1
+                     ))
     
-    fig.update_layout(
-        xaxis_title="Power Output",
-        yaxis_title="Discharge",
-        width=912
+    
+    fig.add_trace(go.Scatter(
+                     x=dt_com["Power Output"],
+                     y=dt_com['Unit Flow'],
+                     name="Commission Data",
+                     mode='markers',
+                     marker_symbol='x-dot',
+                     marker_color='rgba(152, 0, 0, .8)',
+                     marker_size=10,
+                     marker_line_width=2
+                     
+                     ))
+   
+    
+    fig.update_layout(xaxis_title="Power Output", yaxis_title="Discharge (cms)",
+                      yaxis_zeroline=False, xaxis_zeroline=False,
+                      width=912
+                  
     )
 
     st.write(fig)
@@ -153,8 +197,7 @@ def scatterplot_efficiency_power(dt, com, eff):
                      marker_size=10,
                      marker_line_width=2
                      ))
-    
-    fig.update_traces(mode='markers')
+
     fig.update_layout(xaxis_title="Power Output",
                       yaxis_zeroline=False, xaxis_zeroline=False,
                       width=912
@@ -212,15 +255,20 @@ def dashboard_view():
         
         dt = get_selected_data(data, PLANT_SELECTED, UNIT_SELECTED)
 
+        st.markdown('### Tubine - Generator Commissioning Result')
+        unt_ = unt.drop('Plant', axis=1)
+        st.dataframe(unt_)
+        
+        
         st.markdown('### Efficiency and Power Output')
-        option_eff = st.selectbox('Select Type of Efficiency',('Turbine Guaranted Eff.', 'Generator Guaranted Eff.', 'Overall Eff.'))
+        option_eff = st.sidebar.selectbox('Select Type of Efficiency',('Turbine Guaranted Eff.', 'Generator Guaranted Eff.', 'Overall Eff.'))
         scatterplot_efficiency_power(dt, unt, option_eff)
         
         st.markdown('### Discharge and Power Output')
-        scatterplot_discharge_power(dt)
+        scatterplot_discharge_power(dt, unt)
         
         st.markdown('### Hourly Efficiency')
-        scatterplot_efficiency_date(dt)
+        scatterplot_efficiency_date(dt, unt, option_eff)
 
         # st.markdown('### Pair Plot')
         # pairplot(dt)
@@ -229,10 +277,11 @@ def dashboard_view():
         # heatmap(dt)
 
         st.markdown('### Raw data')
-        st.dataframe(dt)
+        dt_ = dt.drop(columns=["DateTime","Plant", "Unit", "Period", "Month" ], axis=1)
         
-        st.markdown('### Tubine - Generator Commissioning Result')
-        st.dataframe(unt)
+        st.dataframe(dt_)
+        
+        
  
 
 
