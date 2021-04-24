@@ -109,7 +109,7 @@ def scatterplot_efficiency_date(dt, com, eff):
     max_text = 'Maximum: ' + str(max_com)
     
     fig.add_annotation(text=min_text,xanchor='left',x=max_dt,y=min_com,arrowhead=1,showarrow=False)
-    fig.add_annotation(text=max_text,xanchor='left',x=max_dt,y=max_com,arrowhead=1,show
+    fig.add_annotation(text=max_text,xanchor='left',x=max_dt,y=max_com,arrowhead=1,showarrow=False)
     
     fig.update_layout(
         xaxis_title="Date",
