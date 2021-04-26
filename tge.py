@@ -35,7 +35,7 @@ remote_css('https://fonts.googleapis.com/icon?family=Material+Icons')
 
 html_temp = """
             <div style="background-color:{};padding:0px;border-radius:2px">
-            <h1 style="color:{};text-align:center; font-family: Courier New; font-size: 20px"> HEDCOR Operations and Maintenance</h1>
+            <h1 style="color:{};text-align:center; font-family: Courier New; font-size: 20px"> Turbine-Generator Efficiency</h1>
             </div>
             """
 st.markdown(html_temp.format('royalblue','white'),unsafe_allow_html=True)
