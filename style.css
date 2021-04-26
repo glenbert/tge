@@ -28,7 +28,7 @@ body {
     flex-shrink: 0;
     height: 100vh;
     overflow: auto;
-    padding: 0rem 1rem;
+    padding: 0rem 0rem;
     position: relative;
     transition: margin-left 300ms ease 0s, box-shadow 300ms ease 0s;
     width: 16rem;
