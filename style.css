@@ -14,9 +14,24 @@ body {
     padding-top: 0em;
 }
 
-.sidebar .sidebar-content {
+/* .sidebar .sidebar-content {
     background-image: linear-gradient(#ecf0f1, #9dcbfa);
     color: rgb(10, 10, 10);
     width: 15em;
     padding-top: 2.5em;
+}
+ */
+
+.css-1l02zno {
+    background-image: linear-gradient(#ecf0f1, #94b0cc);
+    background-attachment: fixed;
+    flex-shrink: 0;
+    height: 100vh;
+    overflow: auto;
+    padding: 2rem 1rem;
+    position: relative;
+    transition: margin-left 300ms ease 0s, box-shadow 300ms ease 0s;
+    width: 16rem;
+    z-index: 100;
+    margin-left: 1px;
 }
