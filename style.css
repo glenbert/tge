@@ -14,13 +14,10 @@ body {
     padding-top: 0em;
 }
 
-/* .sidebar .sidebar-content {
+.reportview-container {
     background-image: linear-gradient(#ecf0f1, #9dcbfa);
-    color: rgb(10, 10, 10);
-    width: 15em;
-    padding-top: 2.5em;
 }
- */
+
 
 .css-1aumxhk {
     background-image: linear-gradient(#ecf0f1, #94b0cc);
