@@ -38,7 +38,7 @@ html_temp = """
             <h1 style="color:{};text-align:center; font-family: Courier New; font-size: 20px"> HEDCOR Operations and Maintenance</h1>
             </div>
             """
-    st.markdown(html_temp.format('royalblue','white'),unsafe_allow_html=True)
+st.markdown(html_temp.format('royalblue','white'),unsafe_allow_html=True)
     
 with st.beta_expander("Upload Data"):
     file = st.file_uploader("Choose CSV file", type="csv")
