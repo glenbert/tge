@@ -33,7 +33,12 @@ def icon(icon_name):
 local_css("style.css")
 remote_css('https://fonts.googleapis.com/icon?family=Material+Icons')
 
-st.markdown("## Turbine-Generator Efficiency")
+html_temp = """
+            <div style="background-color:{};padding:0px;border-radius:2px">
+            <h1 style="color:{};text-align:center; font-family: Courier New; font-size: 20px"> HEDCOR Operations and Maintenance</h1>
+            </div>
+            """
+    st.markdown(html_temp.format('royalblue','white'),unsafe_allow_html=True)
     
 with st.beta_expander("Upload Data"):
     file = st.file_uploader("Choose CSV file", type="csv")
